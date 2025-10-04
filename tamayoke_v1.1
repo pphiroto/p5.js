@@ -1,0 +1,91 @@
+/*
+  v1.0：作成
+  v1.1：敵球の出現が、画面の上下左右からランダムで出現するようになりました
+*/
+
+let canvasSize = 400; //ここでキャンバスサイズを指定
+let x = 0; //x座標を格納する変数を作成（初期値０）
+let y = 0; //y座標を格納する変数を作成（初期値０）
+let dx = 0; //x座標の差分
+let dy = 0; //y座標の差分
+let speed = 10; //弾速を設定
+let randomNum = 0; //ランダム数を格納する。これの数でどの画面外から弾が出るかを判定する。
+
+//初期実行関数
+function setup() {
+  createCanvas(canvasSize, canvasSize);
+  randomNum = random(0, 4); //0~4のランダム
+  if (randomNum >= 0 && randomNum < 1) { //画面上
+    x = random(0, canvasSize);
+    y = 0;
+    dx = 0;
+    dy = speed;
+  } else if (randomNum >= 1 && randomNum < 2) { //画面右
+    x = canvasSize;
+    y = random(0, canvasSize);
+    dx = -speed;
+    dy = 0;
+  } else if (randomNum >= 2 && randomNum < 3) { //画面下
+    x = random(0, canvasSize);
+    y = canvasSize;
+    dx = 0;
+    dy = -speed;
+  } else if (randomNum >= 3 && randomNum < 4) { //画面左
+    x = 0;
+    y = random(0, random(0, canvasSize));
+    dx = speed;
+    dy = 0;
+  }  
+}
+
+//描画関数（秒間60回実行)
+function draw() {
+  background(220); //背景をグレー度220で塗る
+  
+  //敵球をリスポーンさせ、移動量もインプットする。
+  if (x < 0 || y < 0 || x > canvasSize || y > canvasSize) {
+    randomNum = random(0, 4); //0~4のランダム
+    if (randomNum >= 0 && randomNum < 1) { //画面上
+      x = random(0, canvasSize);
+      y = 0;
+      dx = 0;
+      dy = speed;
+    } else if (randomNum >= 1 && randomNum < 2) { //画面右
+      x = canvasSize;
+      y = random(0, canvasSize);
+      dx = -speed;
+      dy = 0;
+    } else if (randomNum >= 2 && randomNum < 3) { //画面下
+      x = random(0, canvasSize);
+      y = canvasSize;
+      dx = 0;
+      dy = -speed;
+    } else if (randomNum >= 3 && randomNum < 4) { //画面左
+      x = 0;
+      y = random(0, random(0, canvasSize));
+      dx = speed;
+      dy = 0;
+    }  
+  }
+    
+  //敵球を動かす
+  x += dx;
+  y += dy;
+  
+  let diameter = canvasSize/4; //直径
+  let radius = canvasSize/8; //半径
+  
+  circle(x, y, diameter); //敵球を描画する
+  circle(mouseX, mouseY, 10); //自機
+  
+  //接触判定
+  if (mouseX >= x-radius && mouseX <= x+radius) {
+    if (mouseY >= y-radius && mouseY <= y+radius) {
+      // ゲームオーバー
+      textAlign(CENTER);
+      textSize(20);
+      text("GAME OVER", canvasSize/2, canvasSize/2);
+      noLoop();
+    }
+  }
+}
