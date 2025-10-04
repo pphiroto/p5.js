@@ -1,0 +1,39 @@
+let canvasSize = 400; //ここでキャンバスサイズを指定
+let x = 0; //x座標を格納する変数を作成（初期値０）
+let y = 0; //y座標を格納する変数を作成（初期値０）
+
+//初期実行関数
+function setup() {
+  createCanvas(canvasSize, canvasSize);
+  x = random(0, canvasSize); //xを0-400のランダム値にする
+}
+
+//描画関数（秒間60回実行)
+function draw() {
+  background(220); //背景をグレー度220で塗る
+  
+  //yの値がcanvasSizeより大きくなったら
+  if (y > canvasSize) {
+    x = random(0, canvasSize); //xの値をランダムにする
+    y = 0; //yの値を0にする。
+  }
+  
+  y = y + 10; //y座標を増やす（下にずらす）
+  
+  let diameter = canvasSize/4; //直径
+  let radius = canvasSize/8; //半径
+  
+  circle(x, y, diameter); //敵球を描画する
+  circle(mouseX, mouseY, 10); //自機
+  
+  //接触判定
+  if (mouseX >= x-radius && mouseX <= x+radius) {
+    if (mouseY >= y-radius && mouseY <= y+radius) {
+      // ゲームオーバー
+      textAlign(CENTER);
+      textSize(20);
+      text("GAME OVER", canvasSize/2, canvasSize/2);
+      noLoop();
+    }
+  }
+}
